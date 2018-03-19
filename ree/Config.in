@@ -1,0 +1,11 @@
+menu "MIPS-TEE packages"
+source "$BR2_EXTERNAL_MIPS_REE_PATH/package/libteec/Config.in"
+source "$BR2_EXTERNAL_MIPS_REE_PATH/package/mips-tee-test/xtest/Config.in"
+
+if BR2_PACKAGE_LIBTEEC
+menu "Client applications"
+source "$BR2_EXTERNAL_MIPS_REE_PATH/package/mips-tee-test/clientapps/Config.in"
+endmenu
+endif
+
+endmenu

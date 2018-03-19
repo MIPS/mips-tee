@@ -1,0 +1,8 @@
+/l4re
+.mrconfig
+*~
+*.swp
+*.orig
+/tags
+/TAGS
+cscope.*

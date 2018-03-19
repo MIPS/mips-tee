@@ -1,0 +1,63 @@
+#!/bin/sh
+
+case $SHELL in
+    *bash*) ;;
+    *)
+        echo "WARNING: While scripts in this project can probably work with most
+                   Bourne compliant shells it is advisable to use BASH shell";;
+esac
+
+# verify that local directory is top level of mips-tee repository
+if [ ! -d ./tee -o ! -d ./ree -o ! -d scripts ]; then
+    echo "Usage: $0 [clean=1]"
+    echo "Usage: must be run from top level directory containing ./tee and ./ree"
+    exit 1
+fi
+
+TOP="`pwd`"
+DO_CLEAN=$1
+SCRIPTS="./scripts"
+MRCONFIG="$TOP/.mrconfig"
+MRTRUST="$HOME/.mrtrust"
+
+TOOLS_BIN="./tools/bin"
+TOOLS_MR="./tools/myrepos"
+# add $TOOLS_BIN to $PATH because 'mr register' calls 'mr' recursively
+export PATH="$TOOLS_BIN:$PATH"
+
+# cleanup generated files and exit
+if [ $DO_CLEAN ]; then
+    DELETE_LIST="$TOOLS_BIN/mr $TOOLS_MR $MRCONFIG"
+    echo "To finish cleaning up consider manually deleting the line containing"
+    echo "$MRCONFIG from the file $MRTRUST"
+    echo "Preparing to cleanup generated files"
+    echo "Deleting: $DELETE_LIST"
+    rm -Ir $DELETE_LIST
+    exit 1
+fi
+
+# Install mr tool
+if [ ! -x $TOOLS_BIN/mr ]; then
+    git clone --branch master --depth 1 git://myrepos.branchable.com/ $TOOLS_MR
+    cp -a $TOOLS_MR/mr $TOOLS_BIN/mr
+fi
+
+# Install external sub-project repositories
+(set -x; $TOOLS_BIN/mr --trust-all -s bootstrap $SCRIPTS/.mips_tee_mrconfig)
+
+# add newly generated top-level .mrconfig to .mrtrust
+if [ ! -e $MRTRUST ]; then
+    echo "Creating $MRTRUST"
+    touch $MRTRUST
+fi
+if ! grep --quiet $MRCONFIG $MRTRUST; then
+    echo "Adding $MRCONFIG to $MRTRUST"
+    echo $MRCONFIG >> $MRTRUST
+fi
+
+# register top-level directory with mr
+$TOOLS_BIN/mr -d $TOP register
+
+echo "Run '$TOOLS_BIN/mr list' to list the paths mr acts on"
+echo "Run '$TOOLS_BIN/mr status' to verify the current status"
+echo "Run '$TOOLS_BIN/mr help' for more information"

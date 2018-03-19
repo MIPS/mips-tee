@@ -1,0 +1,28 @@
+# myrepos configuration file
+# https://myrepos.branchable.com/
+
+[tee/mips-lk]
+checkout = git clone --branch master 'https://github.com/MIPS/mips-lk.git' 'mips-lk'
+
+[ree/buildroot]
+checkout = git clone --depth 1 --branch 2017.02.x 'git://git.busybox.net/buildroot' 'buildroot'
+
+[ree/linux]
+checkout = git clone --branch mipstee-4.4.y 'https://github.com/MIPS/mips-tee-linux.git' 'linux'
+
+[ree/package/libteec]
+checkout = git clone --branch master 'https://github.com/MIPS/mips-tee-client.git' 'libteec'
+
+[ree/package/mips-tee-test]
+checkout = git clone --branch master 'https://github.com/MIPS/mips-tee-test.git' 'mips-tee-test'
+
+[ree/board/rootfs_overlay]
+checkout = mkdir -p rootfs_overlay/usr/include
+skip = [ "$1" = update -o "$1" = status -o "$1" = diff ]
+
+[l4re]
+checkout =
+        svn cat https://svn.l4re.org/repos/oc/l4re/trunk/repomgr | perl - init https://svn.l4re.org/repos/oc/l4re -l l4re mips_tee
+update = svn update
+status = svn status
+diff = svn diff

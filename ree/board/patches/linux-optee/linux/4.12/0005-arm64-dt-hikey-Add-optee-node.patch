@@ -1,0 +1,33 @@
+From 14e21cb8f811100a2104e952b8f5bc0326a5e213 Mon Sep 17 00:00:00 2001
+From: Jerome Forissier <jerome.forissier@linaro.org>
+Date: Tue, 22 Mar 2016 16:38:45 +0100
+Subject: [PATCH 5/5] arm64: dt: hikey: Add optee node
+
+Acked-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index dba3c13..89c1539 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -406,6 +406,13 @@
+ 			};
+ 		};
+ 	};
++
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
+ };
+ 
+ &uart2 {
+-- 
+1.7.11.3
+
